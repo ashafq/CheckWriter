@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0" />
+  <requires lib="Adw" version="1.0" />
+  <template class="CheckwriterWindow" parent="AdwApplicationWindow">
+    <property name="title" translatable="yes">Check Writer</property>
+    <property name="default-width">1024</property>
+    <property name="default-height">400</property>
+    <property name="content">
+      <object class="AdwToolbarView">
+        <child type="top">
+          <object class="AdwHeaderBar" id="header_bar">
+            <child type="end">
+              <object class="GtkMenuButton">
+                <property name="primary">True</property>
+                <property name="icon-name">open-menu-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Menu</property>
+                <property name="menu-model">primary_menu</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <property name="content">
+          <object class="GtkBox" id="main_container">
+            <property name="orientation">horizontal</property>
+            <property name="spacing">10</property>
+            <property name="margin-start">10</property>
+            <property name="margin-end">10</property>
+            <property name="margin-top">10</property>
+            <property name="margin-bottom">10</property>
+
+            <!-- Left Panel -->
+            <child>
+              <object class="GtkBox" id="left_panel">
+                <property name="orientation">vertical</property>
+                <property name="spacing">10</property>
+
+                <!-- Date Picker -->
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Check Date</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkCalendar" id="check_date_calendar" />
+                </child>
+
+                <!-- Pay to the Order of -->
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Pay to the Order of</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="pay_to_order_entry">
+                    <property name="placeholder-text" translatable="yes">Name or Business</property>
+                  </object>
+                </child>
+
+                <!-- Check Amount -->
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Check Amount</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="check_amount_entry">
+                    <property name="placeholder-text" translatable="yes">100.00</property>
+                  </object>
+                </child>
+
+                <!-- Check Memo -->
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Check Memo</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="check_memo_entry">
+                    <property name="placeholder-text" translatable="yes">A brief note describing the
+                      purpose...</property>
+                  </object>
+                </child>
+
+                <!-- Buttons -->
+                <child>
+                  <object class="GtkButton" id="place_on_check_button">
+                    <property name="label" translatable="yes">Place on Check!</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="print_template_button">
+                    <property name="label" translatable="yes">Print Template!</property>
+                  </object>
+                </child>
+
+                <!-- Left Panel -->
+              </object>
+
+            </child>
+
+            <!-- Right Panel -->
+            <child>
+              <object class="GtkFrame" id="check_preview_frame">
+                <property name="label" translatable="yes">Preview</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <child>
+                  <object class="GtkDrawingArea" id="check_preview_area" />
+                </child>
+              </object>
+            </child>
+
+            <!-- main_container -->
+          </object>
+          <!-- name="content" -->
+        </property>
+
+
+      </object>
+    </property>
+  </template>
+  <menu id="primary_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Preferences</attribute>
+        <attribute name="action">app.preferences</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
+        <attribute name="action">win.show-help-overlay</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_About CheckWriter</attribute>
+        <attribute name="action">app.about</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

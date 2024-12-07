@@ -1,0 +1,6 @@
+data/at.shafq.checkwriter.desktop.in
+data/at.shafq.checkwriter.metainfo.xml.in
+data/at.shafq.checkwriter.gschema.xml
+src/main.c
+src/checkwriter-window.c
+src/checkwriter-window.ui

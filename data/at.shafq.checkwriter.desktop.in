@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=checkwriter
+Exec=checkwriter
+Icon=at.shafq.checkwriter
+Terminal=false
+Type=Application
+Categories=GTK;
+StartupNotify=true
