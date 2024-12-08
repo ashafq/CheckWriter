@@ -1,9 +1,12 @@
 # CheckWriter
 
+
 CheckWriter is a modern GTK4-based desktop application designed to simplify the
 process of writing checks. Featuring an intuitive graphical interface, it
 allows you to input check details with ease, preview the layout in real time,
 and generate error-free outputs.
+
+![Screenshot of CheckWriter](screenshot.png)
 
 *NOTE: This is still a work in progress.*
 
