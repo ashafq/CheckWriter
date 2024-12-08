@@ -37,6 +37,8 @@
 #define CHECK_PADY_MM (1.0)
 #define CHECK_FONT_HEIGHT (10)
 #define CHECK_FONT ("Courier")
+#define CHECK_VIEW_FONT_HEIGHT (9)
+#define CHECK_VIEW_FONT ("Sans")
 
 // Date
 #define CHECK_DATE_POSX_MM (85.0)

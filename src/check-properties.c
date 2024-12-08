@@ -25,6 +25,7 @@
 
 #define ENABLE_SCALING(flags) ((flags) & 0x02)
 #define ENABLE_LINES(flags) ((flags) & 0x01)
+#define PATTERN_SIZE 4 // Width and height of the tile
 
 /* FIXME: Load from a config file */
 void
@@ -128,22 +129,55 @@ render_check (cairo_t *cr,
   cairo_set_source_rgb (cr, 1, 1, 1); /* White background */
   cairo_paint (cr);
 
+  /* Draw tiled greyscale pattern from an array */
+  if (ENABLE_LINES (flags))
+    {
+      // Define a small greyscale pattern (1 byte per pixel)
+      static uint8_t pattern_data[PATTERN_SIZE * PATTERN_SIZE] = {
+        // Row 1
+        0x20, 0x00, 0x00, 0x10,
+        // Row 2
+        0x00, 0x20, 0x10, 0x00,
+        // Row 3
+        0x00, 0x10, 0x20, 0x00,
+        // Row 4
+        0x10, 0x00, 0x00, 0x20
+      };
+
+      // Create a surface for the greyscale pattern
+      cairo_surface_t *pattern_surface = cairo_image_surface_create_for_data (
+          pattern_data,
+          CAIRO_FORMAT_A8, // Grayscale format
+          PATTERN_SIZE,
+          PATTERN_SIZE,
+          PATTERN_SIZE // Stride (bytes per row)
+      );
+
+      // Create a Cairo pattern from the surface
+      cairo_pattern_t *pattern = cairo_pattern_create_for_surface (pattern_surface);
+      cairo_pattern_set_extend (pattern, CAIRO_EXTEND_REPEAT);
+
+      // Fill the check area with the tiled pattern
+      cairo_set_source (cr, pattern);
+      cairo_rectangle (cr, x_offset, y_offset, check_width_px, check_height_px);
+      cairo_fill (cr);
+
+      // Cleanup
+      cairo_pattern_destroy (pattern);
+      cairo_surface_destroy (pattern_surface);
+
+      // Reset the color for subsequent drawing
+      cairo_set_source_rgb (cr, 0, 0, 0);
+    }
+
   /* Draw the check border rectangle with padding */
   if (ENABLE_LINES (flags))
     {
-      cairo_set_source_rgb (cr, 1, 0, 0);
+      cairo_set_source_rgb (cr, 1, 0, 0); // Red border
       cairo_rectangle (cr, x_offset, y_offset, check_width_px, check_height_px);
-      cairo_set_line_width (cr, 2);
-      cairo_stroke (cr);
-      cairo_set_source_rgb (cr, 0, 0, 0);
       cairo_set_line_width (cr, 1);
+      cairo_stroke (cr); // Draw the border
     }
-
-  /* Set font and text color */
-  cairo_set_source_rgb (cr, 0, 0, 0); /* Black text */
-  cairo_select_font_face (cr, CHECK_FONT, CAIRO_FONT_SLANT_NORMAL,
-                          CAIRO_FONT_WEIGHT_NORMAL);
-  cairo_set_font_size (cr, CHECK_FONT_HEIGHT);
 
   /* Draw Date */
   double date_x = mm_to_px (check_prop->date.x_pos, x_dpi);
@@ -151,6 +185,11 @@ render_check (cairo_t *cr,
 
   if (date)
     {
+      cairo_set_source_rgb (cr, 0, 0, 0); /* Black text */
+      cairo_select_font_face (cr, CHECK_FONT, CAIRO_FONT_SLANT_NORMAL,
+                              CAIRO_FONT_WEIGHT_NORMAL);
+      cairo_set_font_size (cr, CHECK_FONT_HEIGHT);
+
       cairo_text_extents_t extents;
       cairo_text_extents (cr, date, &extents);
       cairo_move_to (cr, x_offset + x_pad + date_x + (extents.width / 2.0),
@@ -166,7 +205,23 @@ render_check (cairo_t *cr,
       cairo_move_to (cr, x_offset + date_x, y_offset + date_y);
       cairo_line_to (cr, x_offset + date_x + date_width_px, y_offset + date_y);
       cairo_stroke (cr);
+
+      // Set font and text color for the label
       cairo_set_source_rgb (cr, 0, 0, 0);
+      cairo_select_font_face (cr, CHECK_VIEW_FONT, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+      cairo_set_font_size (cr, CHECK_VIEW_FONT_HEIGHT);
+
+      // Calculate the position for "Date" so it ends before the underline
+      cairo_text_extents_t text_extents;
+      cairo_text_extents (cr, "Date", &text_extents);
+
+      // Calculate the starting X position for "Date"
+      double text_x = x_offset + date_x - x_pad - text_extents.width;
+      double text_y = y_offset + date_y - y_pad;
+
+      // Draw "Date"
+      cairo_move_to (cr, text_x, text_y);
+      cairo_show_text (cr, "Date");
     }
 
   /* Draw Name */
@@ -178,6 +233,11 @@ render_check (cairo_t *cr,
       /* Calculate text offset */
       double text_start_x = x_offset + name_x + x_pad;
       double text_start_y = y_offset + name_y - y_pad;
+
+      cairo_set_source_rgb (cr, 0, 0, 0); /* Black text */
+      cairo_select_font_face (cr, CHECK_FONT, CAIRO_FONT_SLANT_NORMAL,
+                              CAIRO_FONT_WEIGHT_NORMAL);
+      cairo_set_font_size (cr, CHECK_FONT_HEIGHT);
 
       cairo_move_to (cr, text_start_x, text_start_y);
       cairo_show_text (cr, name);
@@ -196,7 +256,23 @@ render_check (cairo_t *cr,
       cairo_move_to (cr, line_start_x, line_y);
       cairo_line_to (cr, line_end_x, line_y);
       cairo_stroke (cr);
+
+      // Set font and text color for the label
       cairo_set_source_rgb (cr, 0, 0, 0);
+      cairo_select_font_face (cr, CHECK_VIEW_FONT, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+      cairo_set_font_size (cr, CHECK_VIEW_FONT_HEIGHT);
+
+      // Calculate the position for "Pay To" so it ends before the underline
+      cairo_text_extents_t text_extents;
+      cairo_text_extents (cr, "Pay To", &text_extents);
+
+      // Calculate the starting X position for "Pay To"
+      double text_x = x_offset + name_x - x_pad - text_extents.width;
+      double text_y = y_offset + name_y - y_pad;
+
+      // Draw "Pay To"
+      cairo_move_to (cr, text_x, text_y);
+      cairo_show_text (cr, "Pay To");
     }
 
   /* Draw Amount */
@@ -205,6 +281,11 @@ render_check (cairo_t *cr,
 
   if (amount)
     {
+      cairo_set_source_rgb (cr, 0, 0, 0); /* Black text */
+      cairo_select_font_face (cr, CHECK_FONT, CAIRO_FONT_SLANT_NORMAL,
+                              CAIRO_FONT_WEIGHT_NORMAL);
+      cairo_set_font_size (cr, CHECK_FONT_HEIGHT);
+
       cairo_move_to (cr, x_offset + amount_x + x_pad, y_offset + amount_y - y_pad);
       cairo_show_text (cr, amount);
     }
@@ -221,7 +302,23 @@ render_check (cairo_t *cr,
       cairo_move_to (cr, line_start_x, line_y);
       cairo_line_to (cr, line_end_x, line_y);
       cairo_stroke (cr);
+
+      // Set font and text color for the label
       cairo_set_source_rgb (cr, 0, 0, 0);
+      cairo_select_font_face (cr, CHECK_VIEW_FONT, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+      cairo_set_font_size (cr, CHECK_VIEW_FONT_HEIGHT);
+
+      // Calculate the position for "$" so it ends before the underline
+      cairo_text_extents_t text_extents;
+      cairo_text_extents (cr, "$", &text_extents);
+
+      // Calculate the starting X position for "$"
+      double text_x = x_offset + amount_x - x_pad - text_extents.width;
+      double text_y = y_offset + amount_y - y_pad;
+
+      // Draw "$"
+      cairo_move_to (cr, text_x, text_y);
+      cairo_show_text (cr, "$");
     }
 
   /* Draw Amount in Words */
@@ -231,28 +328,30 @@ render_check (cairo_t *cr,
 
   if (strlen (amount_in_words) > 0)
     {
-      cairo_text_extents_t extents;
-      cairo_text_extents (cr, amount_in_words, &extents);
-
       /* Calculate text offset */
       double text_start_x = x_offset + amount_words_x + x_pad;
       double text_start_y = y_offset + amount_words_y - y_pad;
+      cairo_text_extents_t extents;
+
+      cairo_set_source_rgb (cr, 0, 0, 0); /* Black text */
+      cairo_select_font_face (cr, CHECK_FONT, CAIRO_FONT_SLANT_NORMAL,
+                              CAIRO_FONT_WEIGHT_NORMAL);
+      cairo_set_font_size (cr, CHECK_FONT_HEIGHT);
+      cairo_text_extents (cr, amount_in_words, &extents);
 
       cairo_move_to (cr, text_start_x, text_start_y);
       cairo_show_text (cr, amount_in_words);
 
-      /* Calculate where the dotted line should start (after the text) */
+      /* Calculate where the dotted line should start (aligned with the end of the text) */
       double line_start_x = text_start_x + extents.width + x_pad;
-      double line_end_x =
-          line_start_x + (amount_words_width_px - extents.width) - (2 * x_pad);
-      double line_y =
-          text_start_y - (pts_to_px (CHECK_FONT_HEIGHT, y_dpi) / 2.0) + y_pad;
+      double line_end_x = line_start_x + (amount_words_width_px - extents.width) - (2 * x_pad);
+      double line_y = text_start_y - (pts_to_px (CHECK_FONT_HEIGHT, y_dpi) / 2.0) + y_pad;
 
       /* Only draw this line if within the border */
       if (line_end_x > line_start_x)
         {
           /* Set the dash pattern for dotted line (5 pixels on, 3 pixels off) */
-          double dashes[] = { 5.0, 3.0 };
+          double dashes[] = { 3.0, 3.0 };
           cairo_set_dash (cr, dashes, 2, 0); /* Set dash pattern */
 
           /* Draw the dotted line */
@@ -276,7 +375,14 @@ render_check (cairo_t *cr,
       cairo_move_to (cr, line_start_x, line_y);
       cairo_line_to (cr, line_end_x, line_y);
       cairo_stroke (cr);
+
+      // Set font and text color for the label
       cairo_set_source_rgb (cr, 0, 0, 0);
+      cairo_select_font_face (cr, CHECK_VIEW_FONT, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+      cairo_set_font_size (cr, CHECK_VIEW_FONT_HEIGHT);
+
+      cairo_move_to (cr, line_end_x + x_pad, line_y - y_pad);
+      cairo_show_text (cr, "Dollars");
     }
 
   /* Draw Memo */
@@ -287,6 +393,10 @@ render_check (cairo_t *cr,
     {
       double text_start_x = x_offset + memo_x + x_pad;
       double text_start_y = y_offset + memo_y - y_pad;
+      cairo_set_source_rgb (cr, 0, 0, 0); /* Black text */
+      cairo_select_font_face (cr, CHECK_FONT, CAIRO_FONT_SLANT_NORMAL,
+                              CAIRO_FONT_WEIGHT_NORMAL);
+      cairo_set_font_size (cr, CHECK_FONT_HEIGHT);
       cairo_move_to (cr, text_start_x, text_start_y);
       cairo_show_text (cr, memo);
     }
@@ -304,5 +414,22 @@ render_check (cairo_t *cr,
       cairo_line_to (cr, line_end_x, line_y);
       cairo_stroke (cr);
       cairo_set_source_rgb (cr, 0, 0, 0);
+
+      // Set font and text color for the label
+      cairo_set_source_rgb (cr, 0, 0, 0);
+      cairo_select_font_face (cr, CHECK_VIEW_FONT, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+      cairo_set_font_size (cr, CHECK_VIEW_FONT_HEIGHT - 2);
+
+      // Calculate the position for "Memo" so it ends before the underline
+      cairo_text_extents_t text_extents;
+      cairo_text_extents (cr, "Memo", &text_extents);
+
+      // Calculate the starting X position for "Memo"
+      double text_x = x_offset + memo_x - x_pad - text_extents.width;
+      double text_y = y_offset + memo_y - y_pad;
+
+      // Draw "Memo"
+      cairo_move_to (cr, text_x, text_y);
+      cairo_show_text (cr, "Memo");
     }
 }

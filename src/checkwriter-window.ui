@@ -4,7 +4,7 @@
   <requires lib="Adw" version="1.0" />
   <template class="CheckwriterWindow" parent="AdwApplicationWindow">
     <property name="title" translatable="yes">Check Writer</property>
-    <property name="default-width">1024</property>
+    <property name="default-width">1400</property>
     <property name="default-height">400</property>
     <property name="content">
       <object class="AdwToolbarView">
