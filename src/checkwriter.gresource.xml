@@ -2,6 +2,7 @@
 <gresources>
   <gresource prefix="/at/shafq/checkwriter">
     <file preprocess="xml-stripblanks">checkwriter-window.ui</file>
+    <file preprocess="xml-stripblanks">checkwriter-preferences.ui</file>
     <file preprocess="xml-stripblanks">gtk/help-overlay.ui</file>
   </gresource>
 </gresources>

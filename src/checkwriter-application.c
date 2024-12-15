@@ -21,6 +21,7 @@
 #include "config.h"
 
 #include "checkwriter-application.h"
+#include "checkwriter-preferences.h"
 #include "checkwriter-window.h"
 
 struct _CheckwriterApplication
@@ -77,7 +78,7 @@ checkwriter_application_about_action (GSimpleAction *action,
 
   g_assert (CHECKWRITER_IS_APPLICATION (self));
 
-  // Explicitly cast GtkWindow * to GtkWidget *
+  /* Explicitly cast GtkWindow to GtkWidget */
   window = GTK_WIDGET (gtk_application_get_active_window (GTK_APPLICATION (self)));
 
   if (!window)
@@ -87,10 +88,9 @@ checkwriter_application_about_action (GSimpleAction *action,
     }
 
   adw_show_about_dialog (window,
-                         "application-name", "Checkwriter",
-                         "application-icon", "at.shafq.checkwriter",
-                         "developer-name", "Ayan Shafqat",
-                         "version", "0.1.0",
+                         "application-name", PACKAGE_NAME,
+                         "application-icon", PACKAGE_URI,
+                         "version", PACKAGE_VERSION,
                          "developers", developers,
                          "copyright", "Copyright © 2024 Ayan Shafqat",
                          NULL);
@@ -108,9 +108,44 @@ checkwriter_application_quit_action (GSimpleAction *action,
   g_application_quit (G_APPLICATION (self));
 }
 
+static void
+checkwriter_application_preferences_action (GSimpleAction *action,
+                                            GVariant *parameter,
+                                            gpointer user_data)
+{
+  CheckwriterApplication *self = user_data;
+  GtkWindow *parent_window;
+  GtkWindow *preferences_window;
+
+  g_assert (CHECKWRITER_IS_APPLICATION (self));
+
+  preferences_window = checkwriter_preferences_window_new (GTK_APPLICATION (self));
+  parent_window = gtk_application_get_active_window (GTK_APPLICATION (self));
+
+  if (!preferences_window)
+    {
+      g_debug ("Error: preferences_window could not be created");
+      return;
+    }
+
+  if (parent_window)
+    {
+      gtk_window_set_transient_for (preferences_window, parent_window);
+      g_debug ("Set preferences window as transient for the parent window");
+    }
+  else
+    {
+      g_warning ("No active parent window, preferences dialog will be standalone");
+    }
+
+  gtk_window_set_modal (preferences_window, TRUE);
+  gtk_window_present (preferences_window);
+}
+
 static const GActionEntry app_actions[] = {
   { "quit", checkwriter_application_quit_action },
   { "about", checkwriter_application_about_action },
+  { "preferences", checkwriter_application_preferences_action },
 };
 
 static void
@@ -120,7 +155,12 @@ checkwriter_application_init (CheckwriterApplication *self)
                                    app_actions,
                                    G_N_ELEMENTS (app_actions),
                                    self);
+
   gtk_application_set_accels_for_action (GTK_APPLICATION (self),
                                          "app.quit",
                                          (const char *[]){ "<primary>q", NULL });
+
+  gtk_application_set_accels_for_action (GTK_APPLICATION (self),
+                                         "app.preferences",
+                                         (const char *[]){ "<primary>comma", NULL });
 }

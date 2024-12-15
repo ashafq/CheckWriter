@@ -1,5 +1,4 @@
-/* main.c
- *
+/*
  * Copyright (c) 2024 Ayan Shafqat <ayan@shafq.at>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,25 +17,18 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#include "config.h"
+#ifndef CHECKWRITER_PREFERENCES_WINDOW_H
+#define CHECKWRITER_PREFERENCES_WINDOW_H
 
-#include <glib/gi18n.h>
+#include <gtk/gtk.h>
 
-#include "checkwriter-application.h"
+G_BEGIN_DECLS
+#define CHECKWRITER_TYPE_PREFERENCES (checkwriter_preferences_get_type ())
+G_DECLARE_FINAL_TYPE (CheckwriterPreferences, checkwriter_preferences, CHECKWRITER, PREFERENCES, GtkWidget)
+G_END_DECLS
 
-int
-main (int argc,
-      char *argv[])
-{
-  g_autoptr (CheckwriterApplication) app = NULL;
-  int ret;
+#define CHECKWRITER_PREFERENCES_RESOURCE_FILE ("/at/shafq/checkwriter/checkwriter-preferences.ui")
 
-  bindtextdomain (PACKAGE_NAME, LOCALEDIR);
-  bind_textdomain_codeset (PACKAGE_NAME, "UTF-8");
-  textdomain (PACKAGE_NAME);
+GtkWindow *checkwriter_preferences_window_new (GtkApplication *app);
 
-  app = checkwriter_application_new (PACKAGE_URI, G_APPLICATION_DEFAULT_FLAGS);
-  ret = g_application_run (G_APPLICATION (app), argc, argv);
-
-  return ret;
-}
+#endif /* CHECKWRITER_PREFERENCES_WINDOW_H */
