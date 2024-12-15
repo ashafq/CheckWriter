@@ -2,6 +2,7 @@ checkwriter_sources = [
   'main.c',
   'checkwriter-application.c',
   'checkwriter-window.c',
+  'checkwriter-preferences.c',
   'check-properties.c',
   'num-to-words.c'
 ]

@@ -1,5 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="checkwriter">
 	<schema id="at.shafq.checkwriter" path="/at/shafq/checkwriter/">
+
+		<!-- Font Properties -->
+		<key name="check-font" type="s">
+			<default>'Courier'</default>
+			<summary>Font for the check</summary>
+			<description>The font used for rendering the check.</description>
+		</key>
+		<key name="check-font-height" type="i">
+			<default>10</default>
+			<summary>Font height for the check</summary>
+			<description>The font height used for rendering the check.</description>
+		</key>
+
+		<!-- Check Properties -->
+		<key name="check-width-mm" type="d">
+			<default>152.4</default>
+			<summary>Check width in mm</summary>
+			<description>The width of the check in millimeters.</description>
+		</key>
+		<key name="check-height-mm" type="d">
+			<default>70.0</default>
+			<summary>Check height in mm</summary>
+			<description>The height of the check in millimeters.</description>
+		</key>
+		<key name="check-pad-x-mm" type="d">
+			<default>1.0</default>
+			<summary>Horizontal padding in mm</summary>
+			<description>The horizontal padding for the check layout in millimeters.</description>
+		</key>
+		<key name="check-pad-y-mm" type="d">
+			<default>1.0</default>
+			<summary>Vertical padding in mm</summary>
+			<description>The vertical padding for the check layout in millimeters.</description>
+		</key>
+
+		<!-- Date -->
+		<key name="check-date-pos-x-mm" type="d">
+			<default>85.0</default>
+			<summary>Date position from left) in mm</summary>
+			<description>The distance date field on the check from left in millimeters.</description>
+		</key>
+		<key name="check-date-pos-y-mm" type="d">
+			<default>19.0</default>
+			<summary>Date position from top in mm</summary>
+			<description>The distance date field on the check from top in millimeters.</description>
+		</key>
+		<key name="check-date-width-mm" type="d">
+			<default>38.0</default>
+			<summary>Date field width in mm</summary>
+			<description>The width of the date field on the check in millimeters.</description>
+		</key>
+
+		<!-- Name -->
+		<key name="check-name-pos-x-mm" type="d">
+			<default>16.0</default>
+			<summary>Name position from left in mm</summary>
+			<description>The distance of the name field on the check from the left edge in
+				millimeters.</description>
+		</key>
+		<key name="check-name-pos-y-mm" type="d">
+			<default>29.5</default>
+			<summary>Name position from top in mm</summary>
+			<description>The distance of the name field on the check from the top edge in
+				millimeters.</description>
+		</key>
+		<key name="check-name-width-mm" type="d">
+			<default>97.0</default>
+			<summary>Name field width in mm</summary>
+			<description>The width of the name field on the check in millimeters.</description>
+		</key>
+
+		<!-- Amount -->
+		<key name="check-amount-pos-x-mm" type="d">
+			<default>121.0</default>
+			<summary>Amount position from left in mm</summary>
+			<description>The distance of the amount field on the check from the left edge in
+				millimeters.</description>
+		</key>
+		<key name="check-amount-pos-y-mm" type="d">
+			<default>29.0</default>
+			<summary>Amount position from top in mm</summary>
+			<description>The distance of the amount field on the check from the top edge in
+				millimeters.</description>
+		</key>
+		<key name="check-amount-width-mm" type="d">
+			<default>25.0</default>
+			<summary>Amount field width in mm</summary>
+			<description>The width of the amount field on the check in millimeters.</description>
+		</key>
+
+		<!-- Amount in Words -->
+		<key name="check-amount-in-words-pos-x-mm" type="d">
+			<default>6.0</default>
+			<summary>Amount in words position from left in mm</summary>
+			<description>The distance of the amount in words field on the check from the left edge
+				in millimeters.</description>
+		</key>
+		<key name="check-amount-in-words-pos-y-mm" type="d">
+			<default>37.0</default>
+			<summary>Amount in words position from top in mm</summary>
+			<description>The distance of the amount in words field on the check from the top edge in
+				millimeters.</description>
+		</key>
+		<key name="check-amount-in-words-width-mm" type="d">
+			<default>113.0</default>
+			<summary>Amount in words field width in mm</summary>
+			<description>The width of the amount in words field on the check in millimeters.</description>
+		</key>
+
+		<!-- Memo -->
+		<key name="check-memo-pos-x-mm" type="d">
+			<default>10.0</default>
+			<summary>Memo position from left in mm</summary>
+			<description>The distance of the memo field on the check from the left edge in
+				millimeters.</description>
+		</key>
+		<key name="check-memo-pos-y-mm" type="d">
+			<default>56.0</default>
+			<summary>Memo position from top in mm</summary>
+			<description>The distance of the memo field on the check from the top edge in
+				millimeters.</description>
+		</key>
+		<key name="check-memo-width-mm" type="d">
+			<default>59.0</default>
+			<summary>Memo field width in mm</summary>
+			<description>The width of the memo field on the check in millimeters.</description>
+		</key>
 	</schema>
 </schemalist>

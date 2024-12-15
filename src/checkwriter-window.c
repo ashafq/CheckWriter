@@ -72,7 +72,7 @@ checkwriter_window_on_entry_changed (GtkEntry *entry, gpointer user_data)
   if (entry == GTK_ENTRY (window->pay_to_order_entry))
     {
       g_strlcpy (window->check_data.name, text, STRING_LEN);
-      g_debug ("Pay to the order changed: %s\n", text);
+      g_debug ("Pay to the order changed: %s", text);
     }
   else if (entry == GTK_ENTRY (window->check_amount_entry))
     {
@@ -99,12 +99,12 @@ checkwriter_window_on_entry_changed (GtkEntry *entry, gpointer user_data)
         }
       while (0);
 
-      g_debug ("Amount changed: %s\n", window->check_data.amount);
+      g_debug ("Amount changed: %s", window->check_data.amount);
     }
   else if (entry == GTK_ENTRY (window->check_memo_entry))
     {
       g_strlcpy (window->check_data.memo, text, STRING_LEN);
-      g_debug ("Memo changed: %s\n", text);
+      g_debug ("Memo changed: %s", text);
     }
 
   if (window->check_preview_area)
@@ -183,6 +183,13 @@ checkwriter_window_draw_check_preview (GtkDrawingArea *area,
   display.y_dpi = y_dpi;
 
   check_properties = &window->check_properties;
+
+  /* Reload settings if necessary */
+  if (check_properties_settings_changed ())
+    {
+      check_properties_load (check_properties);
+    }
+
   check_data = &window->check_data;
 
   render_check (cr, &display, check_properties, check_data, CHECK_PREVIEW_ONLY);
@@ -228,7 +235,7 @@ checkwrter_window_on_draw_page (GtkPrintOperation *operation,
 
   render_check (cr, &display, check_properties, check_data, CHECK_WRITE);
 
-  g_debug ("Done rendering page\n");
+  g_debug ("Done rendering page");
 }
 
 static void
@@ -274,13 +281,6 @@ checkwriter_window_on_print_check_clicked (GtkWidget *button,
  * Printing functions (Regular, Fill check)
  */
 
-static char *
-setcharx (char *dst, int ch, size_t count)
-{
-  dst[count] = '\0'; /* Properly NULL terminate the string */
-  return memset (dst, ch, count);
-}
-
 static void
 checkwrter_window_on_draw_template_page (GtkPrintOperation *operation,
                                          GtkPrintContext *context,
@@ -314,15 +314,8 @@ checkwrter_window_on_draw_template_page (GtkPrintOperation *operation,
 
   check_properties = &window->check_properties;
 
-  /* TODO: Remove hard coded constants and fill them with pattern instead  */
-  snprintf (check_data.date, STRING_LEN, "MM/DD/YYYY");
-  setcharx (check_data.name, 'X', 44);
-  setcharx (check_data.amount, 'X', 10);
-  setcharx (check_data.amount_in_words, 'X', 52);
-  setcharx (check_data.memo, 'X', 26);
-
+  check_data_set_sample (&check_data);
   render_check (cr, &display, check_properties, &check_data, CHECK_TEMPLATE);
-
   g_debug ("Done rendering page\n");
 }
 
@@ -379,7 +372,7 @@ checkwriter_window_init (CheckwriterWindow *self)
   gtk_widget_init_template (GTK_WIDGET (self));
 
   /* Initialize check properties */
-  check_properties_init (&self->check_properties);
+  check_properties_load (&self->check_properties);
   check_data_init (&self->check_data);
 
   /* Connect calendar "day-selected" signal */
