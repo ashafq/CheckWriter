@@ -18,7 +18,7 @@ jobs:
     - name: Set up dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y meson ninja-build gcc g++ libgtk-4-dev libadwaita-1-dev
+        sudo apt-get install -y meson ninja-build gcc g++ gettext libgtk-4-dev libadwaita-1-dev
 
     - name: Configure the project with Meson
       run: meson setup build
