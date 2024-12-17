@@ -1,9 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component type="desktop">
-	<id>at.shafq.checkwriter.desktop</id>
-	<metadata_license>CC0-1.0</metadata_license>
-	<project_license>GPL-3.0-or-later</project_license>
-	<description>
-	  <p>No description</p>
-	</description>
+<component type="desktop-application">
+    <id>at.shafq.checkwriter.desktop</id>
+    <name>CheckWriter</name>
+
+    <summary>A modern GTK4 app to simplify writing checks</summary>
+
+    <description>
+        <p>
+            CheckWriter is a modern GTK4-based desktop application designed to
+            simplify the process of writing checks. Featuring an intuitive
+            simplify the process of writing checks. Featuring an intuitive
+            graphical interface, it allows you to input check details with ease,
+            preview the layout in real time, and generate error-free outputs.
+        </p>
+    </description>
+
+    <url type="homepage">http://checkwriter.shafq.at</url>
+
+    <launchable type="desktop-id">at.shafq.checkwriter.desktop</launchable>
+
+    <content_rating type="oars-1.1"></content_rating>
+
+    <developer id="at.shafq.ayan">
+        <name>Ayan Shafqat</name>
+        <url>https://checkwriter.shafq.at</url>
+    </developer>
+
+    <metadata_license>CC0-1.0</metadata_license>
+
 </component>
