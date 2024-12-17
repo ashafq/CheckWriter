@@ -1,5 +1,6 @@
 # CheckWriter
 
+[![C/C++ CI](https://github.com/ashafq/CheckWriter/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/ashafq/CheckWriter/actions/workflows/c-cpp.yml)
 
 CheckWriter is a modern GTK4-based desktop application designed to simplify the
 process of writing checks. Featuring an intuitive graphical interface, it
