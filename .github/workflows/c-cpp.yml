@@ -1,0 +1,33 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y meson ninja-build gcc g++ libgtk-4-dev libadwaita-1-dev
+
+    - name: Configure the project with Meson
+      run: meson setup build
+
+    - name: Build the project
+      run: meson compile -C build
+
+    - name: Run unit tests
+      run: meson test -C build
+
+    - name: Perform distribution checks
+      run: meson dist -C build
